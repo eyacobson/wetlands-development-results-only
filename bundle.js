@@ -61633,11 +61633,17 @@ function summarizeByYear (ractive, inKeyPath, outKeyPath, yearField, sumFields) 
 
 
       /*if (totalSum > 0 ) {*/
-        if (key === 'undefined') {
-          yearSummary.push({'year': 'N/A', 'projects': yearArray.length,'protectedSum': _.round(protectedSum, 1), 'restoredSum': _.round(restoredSum, 1), 'enhancedSum': _.round(enhancedSum, 1),'totalSum': _.round(totalSum, 1), 'fundingSum': fundingSum, 'fundingAvg': fundingAvg});  
-        } else {
-          yearSummary.push({'year': key, 'projects': yearArray.length,'protectedSum': _.round(protectedSum, 1), 'restoredSum': _.round(restoredSum, 1), 'enhancedSum': _.round(enhancedSum, 1),'totalSum': _.round(totalSum, 1), 'fundingSum': fundingSum, 'fundingAvg': fundingAvg});           
-        }
+        if (key === 'undefined') { /* The many 'if' statements are to fit in annual goals -- these goals will never change */
+          yearSummary.push({'year': 'N/A', 'goal': null, 'projects': yearArray.length,'protectedSum': _.round(protectedSum, 1), 'restoredSum': _.round(restoredSum, 1), 'enhancedSum': _.round(enhancedSum, 1),'totalSum': _.round(totalSum, 1), 'fundingSum': fundingSum, 'fundingAvg': fundingAvg});  
+        } else if (key === '2015') {
+          yearSummary.push({'year': key, 'goal': 7000, 'projects': yearArray.length,'protectedSum': _.round(protectedSum, 1), 'restoredSum': _.round(restoredSum, 1), 'enhancedSum': _.round(enhancedSum, 1),'totalSum': _.round(totalSum, 1), 'fundingSum': fundingSum, 'fundingAvg': fundingAvg});           
+        } else if (key === '2016') {
+		  yearSummary.push({'year': key, 'goal': 15000, 'projects': yearArray.length,'protectedSum': _.round(protectedSum, 1), 'restoredSum': _.round(restoredSum, 1), 'enhancedSum': _.round(enhancedSum, 1),'totalSum': _.round(totalSum, 1), 'fundingSum': fundingSum, 'fundingAvg': fundingAvg});
+		} else if (key === '2017') {
+		  yearSummary.push({'year': key, 'goal': 30000, 'projects': yearArray.length,'protectedSum': _.round(protectedSum, 1), 'restoredSum': _.round(restoredSum, 1), 'enhancedSum': _.round(enhancedSum, 1),'totalSum': _.round(totalSum, 1), 'fundingSum': fundingSum, 'fundingAvg': fundingAvg});	
+		} else {
+		  yearSummary.push({'year': key, 'goal': null, 'projects': yearArray.length,'protectedSum': _.round(protectedSum, 1), 'restoredSum': _.round(restoredSum, 1), 'enhancedSum': _.round(enhancedSum, 1),'totalSum': _.round(totalSum, 1), 'fundingSum': fundingSum, 'fundingAvg': fundingAvg});	
+		}
       /*};*/
     }
 
@@ -61676,8 +61682,7 @@ function summarizeByYear (ractive, inKeyPath, outKeyPath, yearField, sumFields) 
 	}, 0);
 
     //ractive.set(outKeyPath+'.overallSummary', _.sortBy(yearSummary, 'year'));
-    ractive.set(outKeyPath+'.overallSummary', yearSummary);     
-
+    ractive.set(outKeyPath+'.overallSummary', yearSummary);
   }  
 
   function summarizeByMetric () {
@@ -61722,7 +61727,7 @@ function summarizeByYear (ractive, inKeyPath, outKeyPath, yearField, sumFields) 
   var restoredData = ractive.get('derivedData.acres_of_coastal_wetlands_restored');
   var enhancedData = ractive.get('derivedData.acres_of_coastal_wetlands_enhanced');
   var fundingData = ractive.get('derivedData.funding_i');
-  var overallData = ractive.get('derivedData.overallSummary');  
+  var overallData = ractive.get('derivedData.overallSummary');
 
   // Now loop through and tally up each metric by year
 
@@ -61743,6 +61748,8 @@ function summarizeByYear (ractive, inKeyPath, outKeyPath, yearField, sumFields) 
 	  var enhaCumul = _(overallData).map('enhancedCumul').dropRight(1).value();
 	  var restCumul = _(overallData).map('restoredCumul').dropRight(1).value();
 	  var fundCumul = _(overallData).map('fundingCumul').dropRight(1).value();
+	  var combinedCumul = _(overallData).map('totalCumul').dropRight(1).value();
+	  var goalSeries = _(overallData).map('goal').dropRight(1).value();
   } else {
 	  var year = _(overallData).map('year').value();
 	  var prot = _(overallData).map('protectedSum').value();
@@ -61755,6 +61762,8 @@ function summarizeByYear (ractive, inKeyPath, outKeyPath, yearField, sumFields) 
 	  var enhaCumul = _(overallData).map('enhancedCumul').value();
 	  var restCumul = _(overallData).map('restoredCumul').value();
 	  var fundCumul = _(overallData).map('fundingCumul').value();
+	  var combinedCumul = _(overallData).map('totalCumul').value();
+	  var goalSeries = _(overallData).map('goal').value();			/* Can't just hardcode goalSeries, b/c the array of years to build it against needs to come in naturally via the data */
   }
   
   /*var year = _(overallData).map('year').dropRight(1).value();
@@ -61806,10 +61815,11 @@ function summarizeByYear (ractive, inKeyPath, outKeyPath, yearField, sumFields) 
     }
   };
 
+  
   // Cumulative miles line graph
-  new Chartist.Line('#graph-overall-cumul', {
+  var acresCumulChart = new Chartist.Line('#graph-overall-cumul', {
     labels: yearLine,
-    series: [protCumul, enhaCumul, restCumul]
+    series: [protCumul, enhaCumul, restCumul, combinedCumul, goalSeries]
     },
     {
     fullWidth: true,
@@ -61825,6 +61835,13 @@ function summarizeByYear (ractive, inKeyPath, outKeyPath, yearField, sumFields) 
       }
     } 
   });
+  
+  if (combinedCumul[combinedCumul.length - 1] < 7000) {
+	  acresCumulChart.update({
+		  labels: yearLine,
+		  series: [protCumul, enhaCumul, restCumul, combinedCumul]
+	  });
+  }
   
   new Chartist.Bar('#graph-funding-peryear', {
      labels: yearLine,

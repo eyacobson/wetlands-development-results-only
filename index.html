@@ -20,8 +20,7 @@
   </head>
 <body id="imds-pt">
 
-<div id="main" class="container-fluid">
-
+<div id="main" class="container-fluid"> 
 	<div id="browser-warning" class="alert alert-info alert-dismissable">
 		<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
 		<strong>Please note:</strong> You may experience issues viewing this app in some versions of Internet Explorer. If so, please view this page in Firefox or Chrome. (Click the "X" at right to close this message).
@@ -213,7 +212,7 @@
 
           <div class="tab-content">
             <div role="tabpanel" id="graph-overall-peryear-tab" class="tab-pane graph-tab active">
-              <h4>Acres per Year</h4>  
+              <h4>Acres per Year</h4>
               <div id="graph-overall-peryear" class="chart  ct-major-twelfth"></div>
 
               <div class="graph-overall-xaxis">
@@ -224,13 +223,13 @@
                 <ul class="list list-inline">
                   <li><span class="legend-block protected"></span>Protected ({{sumBy(derivedData.overallSummary, 'protectedSum')}} ac)</li>
                   <li><span class="legend-block enhanced"></span>Enhanced ({{sumBy(derivedData.overallSummary, 'enhancedSum')}} ac) </li>
-                  <li><span class="legend-block restored"></span>Restored ({{sumBy(derivedData.overallSummary, 'restoredSum')}} ac)</li>                  
+                  <li><span class="legend-block restored"></span>Restored ({{sumBy(derivedData.overallSummary, 'restoredSum')}} ac)</li>
               </div>
-              <p class="small"><em>* Data source: Great Lakes Restoration Database (GLRD).<br>Additional acres conserved but lacking a date are not shown on graph. See table for details.</em></p>
+              <p class="small"><em>* Data source: Great Lakes Restoration Database (GLRD).<br>Additional acres conserved but lacking a date are not shown on graph (but are included in acreage totals in legend). See table for details.</em></p>
             </div>
 
             <div role="tabpanel" id="graph-overall-cumul-tab" class="tab-pane graph-tab">
-              <h4>Goal: 60,000 acres restored</h4>  
+              <h5><a target="_blank" href="https://www.glri.us/actionplan/pdfs/glri-action-plan-2.pdf">Goal: 60,000 acres protected, restored, and enhanced by 2019</a></h5>
               <div id="graph-overall-cumul" class="chart  ct-major-twelfth"></div>
 
               <div class="graph-overall-xaxis">
@@ -239,11 +238,13 @@
 
               <div id="graph-overall-legend-bar">
                 <ul class="list list-inline">
-                  <li><span class="legend-block protected"></span>Protected ({{sumBy(derivedData.overallSummary, 'protectedSum')}} ac)</li>
+                  <li><span class="legend-block protected"></span>Protected ({{sumBy(derivedData.overallSummary, 'protectedSum')}} ac)</li> <!-- Legend acres DO include acres for N/A years -->
                   <li><span class="legend-block enhanced"></span>Enhanced ({{sumBy(derivedData.overallSummary, 'enhancedSum')}} ac) </li>
-                  <li><span class="legend-block restored"></span>Restored ({{sumBy(derivedData.overallSummary, 'restoredSum')}} ac)</li>                  
+                  <li><span class="legend-block restored"></span>Restored ({{sumBy(derivedData.overallSummary, 'restoredSum')}} ac)</li>
+				  <li><span class="legend-block combined"></span>Combined ({{sumBy(derivedData.overallSummary, 'totalSum')}} ac)</li>
+				  <li><span class="legend-block goal"></span>Goal line</li>
               </div>
-              <p class="small"><em>* Data source: Great Lakes Restoration Database (GLRD).<br>Additional acres conserved but lacking a date  are not shown on graph. See table for details.</em></p>
+              <p class="small"><em>* Data source: Great Lakes Restoration Database (GLRD).<br>Additional acres conserved but lacking a date are not shown on graph (but are included in acreage totals in legend). See table for details.</em></p>
 
             </div>
 
@@ -301,7 +302,7 @@
 <!--               <li><strong>Show: </strong></li> -->
 <!--               <li class="active"><a href="#graph-funding-peryear-tab" role="tab" data-toggle="tab" on-click='graph-change' >Per Year</a></li> -->
 <!--               <li><a href="#graph-funding-cumul-tab" role="tab" data-toggle="tab" on-click='graph-change' >Cumulative</a></li> -->
-              <li>Avg IBI: {{findBy(derivedData.wetlandpts, 'ibi_class', 'Total', 'avg')}}</li>
+              <li>Avg IBI: {{findBy(derivedData.wetlandpts, 'ibi_class', 'Total', 'avg')}}</li> <!-- BTW this is causing severe lag under certain use patterns (I think it's this, anyway) & generates a weird JS error -->
               <li>Coastal Wetlands: {{inputData.wetlandpts.markers.inBounds.length}}</li>
             </ul>
           </div>

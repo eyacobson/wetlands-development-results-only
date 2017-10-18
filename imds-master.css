@@ -218,6 +218,8 @@ h3 sup {
 span.legend-block.protected {width: 20px; height: 12px; float: left; margin: 3px 5px 3px 5px; background: #923411;}
 span.legend-block.enhanced {width: 20px; height: 12px; float: left; margin: 3px 5px 3px 5px; background: #f5786e;}
 span.legend-block.restored {width: 20px; height: 12px; float: left; margin: 3px 5px 3px 5px; background: #f4c63d;}
+span.legend-block.combined {width: 20px; height: 12px; float: left; margin: 3px 5px 3px 5px; background: #d17905;}
+span.legend-block.goal {width: 20px; height: 12px; float: left; margin: 3px 5px 3px 5px; background: #453d3f;}
 
 /*.my-cool-point{
   fill-opacity: 1!important;
